@@ -1,26 +1,12 @@
 # Part 1
+input<- scan("day_1/input.txt")
 
-library(tidyverse)
+check_expenses <- function(expenses, entry_count, goal){
+  # Create all combinations of m size, select the two that sum to the goal amount, and multiply them together
+  solution <- prod(combn(expenses, entry_count)[, which(colSums(combn(expenses, entry_count)) == goal)])
+}
 
-input_x <- scan("day_1/input.txt")
-input_y <- input_x
-
-grid <- expand_grid(input_x, input_y)
-
-grid <- grid %>%
-  mutate(combo = input_x + input_y) %>%
-  filter(combo == 2020) %>%
-  mutate(multiply = input_x * input_y) %>%
-  distinct(multiply)
+print(check_expenses(input, 2, 2020))
 
 # Part 2
-
-input_z <- input_y
-
-grid <- expand_grid(input_x, input_y, input_z)
-
-grid <- grid %>%
-  mutate(combo = input_x + input_y + input_z) %>%
-  filter(combo == 2020) %>%
-  mutate(multiply = input_x * input_y * input_z) %>%
-  distinct(multiply)
+print(check_expenses(input, 3, 2020))
