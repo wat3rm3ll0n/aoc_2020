@@ -31,4 +31,3 @@ test <- passwords %>%
                                    .y = pw_char,
                                    .f = ~str_locate_all(.x, .y))) %>%
   unnest(possible_positions)
-  
