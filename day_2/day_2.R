@@ -18,16 +18,23 @@ passwords %>%
                       .y = pw_char,
                       .f = ~ str_count(.x, .y)
                       ),
-         valid = if_else(count >= pw_input1 & count <= pw_input2,
-                   "Valid",
-                   "Invalid")) %>%
+         valid = count >= pw_input1 & count <= pw_input2) %>%
   group_by(valid) %>%
   count()
 
 # Part 2
 
-test <- passwords %>%
+passwords %>%
   mutate(possible_positions = map2(.x = pw,
                                    .y = pw_char,
-                                   .f = ~str_locate_all(.x, .y))) %>%
-  unnest(possible_positions)
+                                   .f = ~str_locate_all(.x, .y)) %>%
+                              map(~unlist(pluck(.x, 1)[,1])),
+         pw_input1_test = map2_lgl(.x = pw_input1,
+                               .y = possible_positions,
+                               .f = ~ .x %in% unlist(.y)),
+         pw_input2_test = map2_lgl(.x = pw_input2,
+                               .y = possible_positions,
+                               .f = ~ .x %in% unlist(.y)),
+         valid = pw_input1_test != pw_input2_test) %>%
+  group_by(valid) %>%
+  count()
